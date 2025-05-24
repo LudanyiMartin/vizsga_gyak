@@ -12,3 +12,25 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model Book {
+  id          BigInt    @id @default(autoincrement())
+  title       String
+  author      String
+  publish_year Int
+  page_count  Int
+  created_at  DateTime?
+  updated_at  DateTime?
+  rentals     Rental[]  @relation("BookRentals")
+  @@map("books")
+}
+
+model Rental {
+  id         Int      @id @default(autoincrement())
+  book_id    BigInt
+  start_date DateTime
+  end_date   DateTime
+  created_at DateTime? @default(now())
+  book       Book     @relation(fields: [book_id], references: [id], name: "BookRentals")
+  @@map("rentals")
+}

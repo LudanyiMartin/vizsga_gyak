@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `books` MODIFY `id` BIGINT NOT NULL AUTO_INCREMENT;
