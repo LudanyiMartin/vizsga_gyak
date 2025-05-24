@@ -71,4 +71,20 @@ export class BooksService {
       select: { start_date: true, end_date: true },
     });
   }
+
+  async deleteBook(id: string) {
+    let bookId: bigint;
+    try {
+      bookId = BigInt(id);
+    } catch {
+      throw new HttpException({ message: 'Érvénytelen könyv azonosító' }, HttpStatus.BAD_REQUEST);
+    }
+    const book = await prisma.book.findUnique({ where: { id: bookId } });
+    if (!book) {
+      throw new HttpException({ message: 'Book not found' }, HttpStatus.NOT_FOUND);
+    }
+    await prisma.rental.deleteMany({ where: { book_id: bookId } });
+    await prisma.book.delete({ where: { id: bookId } });
+    return { message: 'Book deleted successfully' };
+  }
 }
